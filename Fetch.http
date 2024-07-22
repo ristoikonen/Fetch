@@ -1,0 +1,6 @@
+@Fetch_HostAddress = https://localhost:7135
+
+GET {{Fetch_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
