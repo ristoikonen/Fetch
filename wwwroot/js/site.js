@@ -1,4 +1,6 @@
 const uri = 'https://localhost:7135/WeatherForecast';
+const uriSongs = 'https://localhost:7135/Songs';
+const uriSongByname = 'https://localhost:7135/Songs&Id=d';
 let forecasts = [];
 
 // https://localhost:7135/WeatherForecast
@@ -19,7 +21,39 @@ function getForecast() {
       .then(data => _displayForecast(data))
       .then(data => console.log(data))
       .catch(error => console.error('Unable to get forecast.', error));
-  }
+}
+
+function getSongs() {
+    fetch(uriSongs, {
+        mode: 'cors',
+        method: 'GET',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        // body: JSON.stringify({
+        //   key1: 'value1',
+        //   key2: 'value2'
+        // })
+    })
+        .then(response => response.json())
+        .then(data => _displaySongs(data))
+        .then(data => console.log(data))
+        .catch(error => console.error('Unable to get songs.', error));
+}
+
+function getSongByName() {
+    fetch(uriSongByname, {
+        mode: 'cors',
+        method: 'GET',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+    })
+    .then(response => response.json())
+    .then(data => _displaySong(data))
+    .then(data => console.log(data))
+    .catch(error => console.error('Unable to get songs.', error));
+}
 
 function _displayForecast(data) {
 
@@ -32,15 +66,15 @@ function _displayForecast(data) {
     console.log('_displayForecast');
 
   data.forEach(item => {
-    console.log('f');
-    //add rows to tables body 
+        
+    //add rows to tbody
     let tr = tBody.insertRow();
         
     let td1 = tr.insertCell(0);
-      td1.appendChild(document.createTextNode(item.summary));
+    td1.appendChild(document.createTextNode(item.summary));
 
-     let td2 = tr.insertCell(1);
-      td2.appendChild(document.createTextNode(item.temperatureC));
+    let td2 = tr.insertCell(1);
+    td2.appendChild(document.createTextNode(item.temperatureC));
 
     //td1.appendChild(document.createTextNode(item));
 
@@ -53,6 +87,132 @@ function _displayForecast(data) {
 
 }
 
+function _displaySong(data) {
+
+    
+        context.decodeAudioData(new ArrayBuffer(new Uint8Array(item.data)), function (buffer) {
+            dogBarkingBuffer = buffer;
+        });
+
+        const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+        const fetchSong = (path) =>
+            fetch(path)
+                .then((res) => res.arrayBuffer())
+                .then((arrayBuffer) => audioContext.decodeAudioData(arrayBuffer));
+
+        // new ArrayBuffer(
+        const audio2 = document.getElementById('audio2');
+        const source2 = document.getElementById('source2');
+
+        source2.src = dogBarkingBuffer;
+        audio2.load();
+
+        // Create blob from Uint8Array & Object URL.
+        const blob = new Blob([new Uint8Array(item.data)], { type: 'audio/wav' });
+        //const blob = new Blob(item.data, { type: 'audio/wav' });
+
+}
+
+function playByteArray(bytes) {
+    var buffer = new Uint8Array(bytes.length);
+    buffer.set(new Uint8Array(bytes), 0);
+
+    context.decodeAudioData(buffer.buffer, play);
+}
+
+function play(audioBuffer) {
+    var source = context.createBufferSource();
+    source.buffer = audioBuffer;
+    source.connect(context.destination);
+    source.start(0);
+}
+
+function _displaySongs(data) {
+
+    // get pointer to tables body 
+    const tBody = document.getElementById('songs');
+    tBody.innerHTML = '';
+
+    console.log(data);
+    console.log('_displaySongs');
+
+    data.forEach(item => {
+
+        //add rows to tbody
+        let tr = tBody.insertRow();
+
+        let td1 = tr.insertCell(0);
+        td1.appendChild(document.createTextNode(item.name));
+
+        //let td2 = tr.insertCell(1);
+        //td2.appendChild(document.createTextNode(item.data));
+        context.decodeAudioData(new ArrayBuffer(new Uint8Array(item.data)), function (buffer) {
+            dogBarkingBuffer = buffer;
+        });
+        /*
+        const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+        const fetchSong = (path) =>
+            fetch(path)
+                .then((res) => res.arrayBuffer())
+                .then((arrayBuffer) => audioContext.decodeAudioData(arrayBuffer));
+        */
+
+        // new ArrayBuffer(
+        // Get DOM elements.
+        var bytes = item.data;
+        var buffer2 = new Uint8Array(bytes.length);
+        buffer2.set(new Uint8Array(bytes), 0);
+
+        const blob2 = new Blob(buffer2, { type: 'audio/wav' });
+        //context.decodeAudioData(buffer2.buffer, play);
+        //console.log(buffer2.buffer);
+
+        const audio2 = document.getElementById('audio2');
+        const source2 = document.getElementById('source2');
+
+        source2.src = blob2;// dogBarkingBuffer;
+        audio2.load();
+
+        // Create blob from Uint8Array & Object URL.
+        const blob = new Blob([new Uint8Array(item.data)], { type: 'audio/wav' });
+
+
+        //const blob = new Blob(item.data, { type: 'audio/wav' });
+        //console.log(blob2);
+        const url = URL.createObjectURL(blob);
+
+        // Get DOM elements.
+        const audio = document.getElementById('audio');
+        const source = document.getElementById('source');
+
+        // Insert blob object URL into audio element & play.
+        source.src = blob; // url;
+        //console.log(url);
+        audio.load();
+        //audio.play();
+
+    });
+
+    forecasts = data;
+
+}
+
+var dogBarkingBuffer = null;
+var context = new AudioContext();
+
+function loadDogSound(url) {
+    var request = new XMLHttpRequest();
+    request.open('GET', url, true);
+    request.responseType = 'arraybuffer';
+
+    // Decode asynchronously
+    request.onload = function () {
+        context.decodeAudioData(request.response, function (buffer) {
+            dogBarkingBuffer = buffer;
+        }, onError);
+    }
+    request.send();
+}
 
 //  const button = document.createElement('button');
 

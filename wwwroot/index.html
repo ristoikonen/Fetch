@@ -19,13 +19,30 @@
     </table>
 
 
-    
+    <table>
+        <tr>
+            <th>name</th>
+            <th>file</th>
+            <th></th>
+            <th></th>
+        </tr>
+        <tbody id="songs"></tbody>
+
+    </table>
+    <audio controls="controls" id="audio" loop>
+        Your browser does not support the &lt;audio&gt; tag.
+        <source id="source" src="" type="audio/wav" />
+    </audio>
+
+    <audio controls="controls" id="audio2" loop>
+        Your browser does not support the &lt;audio&gt; tag.
+        <source id="source2" src="" type="audio/wav" />
+    </audio>
+
     <!--<form action="javascript:void(0);" method="GET" onsubmit="addItem()">
         <input type="text" id="add-name" placeholder="New to-do">
         <input type="submit" value="Add">
     </form>-->
-
-
     <!-- <form action="javascript:void(0);" method="POST" onsubmit="addItem()">
         <input type="text" id="add-name" placeholder="New to-do">
         <input type="submit" value="Add">
@@ -58,6 +75,7 @@
     <script type="text/javascript">
         console.log('getForecast');
         getForecast();
+        getSongs();
     </script>
 </body>
 </html>
