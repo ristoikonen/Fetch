@@ -1,6 +1,6 @@
 const uri = 'https://localhost:7135/WeatherForecast';
 const uriSongs = 'https://localhost:7135/Songs';
-const uriSongByname = 'https://localhost:7135/Songs&Id=d';
+const uriSongByname = 'https://localhost:7135/Songs/1';
 let forecasts = [];
 
 // https://localhost:7135/WeatherForecast
@@ -41,18 +41,20 @@ function getSongs() {
         .catch(error => console.error('Unable to get songs.', error));
 }
 
+
+//Fileresponse
 function getSongByName() {
     fetch(uriSongByname, {
         mode: 'cors',
         method: 'GET',
         headers: {
-            'Content-Type': 'application/json'
+            'Content-Type': 'audio/wav'
         },
     })
-    .then(response => response.json())
+    //.then(response => response.json())
     .then(data => _displaySong(data))
     .then(data => console.log(data))
-    .catch(error => console.error('Unable to get songs.', error));
+    .catch(error => console.error('Unable to get song by name.', error));
 }
 
 function _displayForecast(data) {
@@ -89,27 +91,25 @@ function _displayForecast(data) {
 
 function _displaySong(data) {
 
-    
-        context.decodeAudioData(new ArrayBuffer(new Uint8Array(item.data)), function (buffer) {
-            dogBarkingBuffer = buffer;
-        });
+    console.log(data);
+    //context.decodeAudioData(new ArrayBuffer(new Uint8Array(item.data)), function (buffer) {
+    //    dogBarkingBuffer = buffer;
+    //});
 
-        const audioContext = new (window.AudioContext || window.webkitAudioContext)();
-        const fetchSong = (path) =>
-            fetch(path)
-                .then((res) => res.arrayBuffer())
-                .then((arrayBuffer) => audioContext.decodeAudioData(arrayBuffer));
+    //const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+    //const fetchSong = (path) =>
+    //    fetch(path)
+    //        .then((res) => res.arrayBuffer())
+//        .then((arrayBuffer) => audioContext.decodeAudioData(arrayBuffer));
 
-        // new ArrayBuffer(
-        const audio2 = document.getElementById('audio2');
-        const source2 = document.getElementById('source2');
+    const blob = new Blob([new Uint8Array(data)], { type: 'audio/wav' });
 
-        source2.src = dogBarkingBuffer;
-        audio2.load();
+    // new ArrayBuffer(
+    const audio2 = document.getElementById('audio2');
+    const source2 = document.getElementById('source2');
 
-        // Create blob from Uint8Array & Object URL.
-        const blob = new Blob([new Uint8Array(item.data)], { type: 'audio/wav' });
-        //const blob = new Blob(item.data, { type: 'audio/wav' });
+    source2.src = data;
+    audio2.load();
 
 }
 
@@ -149,6 +149,7 @@ function _displaySongs(data) {
         context.decodeAudioData(new ArrayBuffer(new Uint8Array(item.data)), function (buffer) {
             dogBarkingBuffer = buffer;
         });
+
         /*
         const audioContext = new (window.AudioContext || window.webkitAudioContext)();
         const fetchSong = (path) =>
@@ -163,6 +164,8 @@ function _displaySongs(data) {
         var buffer2 = new Uint8Array(bytes.length);
         buffer2.set(new Uint8Array(bytes), 0);
 
+        console.log(bytes);
+
         const blob2 = new Blob(buffer2, { type: 'audio/wav' });
         //context.decodeAudioData(buffer2.buffer, play);
         //console.log(buffer2.buffer);
@@ -170,7 +173,8 @@ function _displaySongs(data) {
         const audio2 = document.getElementById('audio2');
         const source2 = document.getElementById('source2');
 
-        source2.src = blob2;// dogBarkingBuffer;
+        source2.src = bytes; // blob2;// dogBarkingBuffer;
+        source.start(0);
         audio2.load();
 
         // Create blob from Uint8Array & Object URL.
