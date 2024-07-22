@@ -7,6 +7,12 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Content Remove="wwwroot\css\site.css" />
+    <Content Remove="wwwroot\index.html" />
+    <Content Remove="wwwroot\js\site.js" />
+  </ItemGroup>
+
+  <ItemGroup>
     <None Remove="Fetcher\Fetcher" />
   </ItemGroup>
 
@@ -15,7 +21,9 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="wwwroot\" />
+    <None Include="wwwroot\css\site.css" />
+    <None Include="wwwroot\index.html" />
+    <None Include="wwwroot\js\site.js" />
   </ItemGroup>
 
 </Project>
